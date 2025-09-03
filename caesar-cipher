@@ -1,0 +1,60 @@
+# caesar_cipher.py
+
+def shift_char(ch: str, k: int) -> str:
+    """Shift a single character by k positions. Preserve case; skip non-letters."""
+    if 'A' <= ch <= 'Z':
+        base = ord('A')
+        return chr((ord(ch) - base + k) % 26 + base)
+    elif 'a' <= ch <= 'z':
+        base = ord('a')
+        return chr((ord(ch) - base + k) % 26 + base)
+    else:
+        return ch  # leave spaces, punctuation, digits, etc.
+
+def caesar_encrypt(text: str, shift: int) -> str:
+    """Encrypt text by shifting letters forward by 'shift'."""
+    shift = shift % 26  # normalize, so 27 -> 1, -1 -> 25, etc.
+    return ''.join(shift_char(c, shift) for c in text)
+
+def caesar_decrypt(text: str, shift: int) -> str:
+    """Decrypt text by shifting letters backward by 'shift'."""
+    return caesar_encrypt(text, -shift)
+
+def _self_test():
+    """Quick checks to verify correctness."""
+    msg = "Hello, World!"
+    assert caesar_encrypt("Abc xyz", 5) == "Fgh cde"
+    assert caesar_decrypt("Fgh cde", 5) == "Abc xyz"
+    assert caesar_encrypt(msg, 3) == "Khoor, Zruog!"
+    assert caesar_decrypt("Khoor, Zruog!", 3) == msg
+    assert caesar_encrypt("Python-3.11", 10) == "Zidryx-3.11"
+    print("Self-test passed ✅")
+
+def main():
+    print("=== Caesar Cipher ===")
+    print("1) Encrypt")
+    print("2) Decrypt")
+    choice = input("Choose (1/2): ").strip()
+
+    text = input("Enter the message: ")
+    while True:
+        try:
+            shift = int(input("Enter shift (integer, e.g., 3): "))
+            break
+        except ValueError:
+            print("Please enter a valid integer.")
+
+    if choice == '1':
+        result = caesar_encrypt(text, shift)
+        print("Ciphertext:", result)
+    elif choice == '2':
+        result = caesar_decrypt(text, shift)
+        print("Plaintext:", result)
+    else:
+        print("Invalid choice. Run again and choose 1 or 2.")
+
+if __name__ == "__main__":
+    # Run quick self-test once each time you execute the script
+    _self_test()
+    # Then start the interactive program
+    main()
